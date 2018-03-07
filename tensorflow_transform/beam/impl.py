@@ -96,8 +96,6 @@ from tensorflow_transform.saved import saved_transform_io
 from tensorflow_transform.tf_metadata import dataset_metadata
 from tensorflow_transform.tf_metadata import dataset_schema
 
-_METRICS_NAMESPACE = 'tfx.Transform'
-
 _DATASET_ELEMENT_TYPE = Dict[str, Union[common.PRIMITIVE_TYPE,
                                         # Arbitrarily-nested lists are allowed.
                                         List[Any], np.generic, np.ndarray]]
@@ -282,11 +280,11 @@ class _RunMetaGraphDoFn(beam.DoFn):
 
     # Metrics.
     self._graph_load_seconds_distribution = beam.metrics.Metrics.distribution(
-        _METRICS_NAMESPACE, 'graph_load_seconds')
+        common.METRICS_NAMESPACE, 'graph_load_seconds')
     self._batch_size_distribution = beam.metrics.Metrics.distribution(
-        _METRICS_NAMESPACE, 'batch_size')
-    self._num_instances = beam.metrics.Metrics.counter(_METRICS_NAMESPACE,
-                                                       'num_instances')
+        common.METRICS_NAMESPACE, 'batch_size')
+    self._num_instances = beam.metrics.Metrics.counter(
+        common.METRICS_NAMESPACE, 'num_instances')
 
   def _handle_batch(self, batch):
     self._batch_size_distribution.update(len(batch))
